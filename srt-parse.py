@@ -18,11 +18,11 @@ def build_parser():
     '''
     Creates an argparse parser
     '''
-    parser = argparse.ArgumentParser(description='Segment .mp3 files according to a provided .srt closed caption file',
+    parser = argparse.ArgumentParser(description='Segment .wav files according to a provided .srt closed caption file',
                                      prog='srt-parse')
 
     parser.add_argument('audio_input', type=str,
-                        help='Location of .mp3 file to be processed')
+                        help='Location of .wav file to be processed')
     parser.add_argument('srt_input', type=str,
                         help='Location of .srt file to be processed')
     parser.add_argument('--output-dir',  type=str,
@@ -30,7 +30,7 @@ def build_parser():
                         default='.\\out\\')
     parser.add_argument('--audio-out-file-pattern', type=str,
                         help='A python-style f-string for saving audio files',
-                        default='{}-audio.mp3')
+                        default='{}-audio.wav')
     parser.add_argument('--text-out-file-pattern', type=str,
                         help='A python-style f-string for saving text files',
                         default='{}-text.txt')
@@ -63,10 +63,10 @@ def write_txt():
     for idx, sub in enumerate(subs):
         if idx % args.update_increment == 0:
             print(f'Processing segment #{idx}')
-            
+
         start, end = get_slice_indexes(sub)
         clip = audio[start:end]
-        clip.export(args.output_dir + args.audio_out_file_pattern.format(idx), format='mp3')
+        clip.export(args.output_dir + args.audio_out_file_pattern.format(idx), format='wav')
         with open(os.path.join(args.output_dir, args.text_out_file_pattern.format(idx)), 'w', encoding=args.out_encoding) as f:
             f.write(sub.content.replace('\n', ' '))
 
@@ -81,7 +81,7 @@ def write_csv():
                 print(f'Processing segment #{idx}')
             start, end = get_slice_indexes(sub)
             clip = audio[start:end]
-            clip.export(os.path.join(args.output_dir, args.audio_out_file_pattern.format(idx)), format='mp3')
+            clip.export(os.path.join(args.output_dir, args.audio_out_file_pattern.format(idx)), format='wav')
             f.write(args.csv_seperator.join([args.audio_out_file_pattern.format(idx), sub.content.replace('\n', ' ')]))
             f.write('\n')
 
@@ -119,12 +119,12 @@ try:
 except FileExistsError:
     parser.error(f"Output path {args.output_dir} is not a directory.\nsrt-parse will now exit.")
     sys.exit()
- 
+
 # Open srt file
 subs = get_subs()
 
 # Open audio file
-audio = AudioSegment.from_mp3(args.audio_input)
+audio = AudioSegment.from_wav(args.audio_input)
 
 # Determine which writing function to use
 write = get_write_function()
