@@ -66,7 +66,7 @@ def write_txt():
 
         start, end = get_slice_indexes(sub)
         clip = audio[start:end]
-        clip.export(args.output_dir + args.audio_out_file_pattern.format(idx, '08d'), format='wav')
+        clip.export(args.output_dir + args.audio_out_file_pattern.format(idx), format='wav')
         with open(os.path.join(args.output_dir, args.text_out_file_pattern.format(idx)), 'w', encoding=args.out_encoding) as f:
             f.write(sub.content.replace('\n', ' '))
 
@@ -81,7 +81,7 @@ def write_csv():
                 print(f'Processing segment #{idx}')
             start, end = get_slice_indexes(sub)
             clip = audio[start:end]
-            clip.export(os.path.join(args.output_dir, args.audio_out_file_pattern.format(idx, '08d')), format='wav')
+            clip.export(os.path.join(args.output_dir, args.audio_out_file_pattern.format(idx)), format='wav')
             f.write(args.csv_seperator.join([args.audio_out_file_pattern.format(idx), sub.content.replace('\n', ' ')]))
             f.write('\n')
 
